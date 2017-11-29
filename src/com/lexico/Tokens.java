@@ -20,7 +20,7 @@ public class Tokens extends JFrame {
 		this.setSize(605, 393);
 		JScrollPane scrollPane = new JScrollPane();
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		String column[] = {"Token","Tipo","Repeticiones"};
+		String column[] = {"Tipo","Variable","Valor","Estado","Tipo de Valor"};
 		model= new DefaultTableModel(column,0);
 		table =new JTable(model);	
 		scrollPane.setViewportView(table);
