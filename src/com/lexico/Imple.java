@@ -9,8 +9,7 @@ import jflex.SilentExit;
 public class Imple {
 	public static void main(String a[]) {
 		//
-	    new Main().generate(new File("C:\\Users\\KEVIN\\eclipse-workspace\\ProyectoAutomatas\\src\\com\\lexico\\CalculaTokens.lex"));
-		
+	    new Main().generate(new File("C:\\Users\\KEVIN\\eclipse-workspace\\ProyectoAutomatas\\src\\com\\lexico\\Rules.jflex"));
 //	    StringReader sc= new StringReader("valivali vali ' ' '''");
 //	    Yylex y= new Yylex(sc);
 //	    try {

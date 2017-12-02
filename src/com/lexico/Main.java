@@ -30,7 +30,7 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
 
-public class Lexico extends JFrame {
+public class Main extends JFrame {
 
 	/**
 	 * This serial version for the class
@@ -38,12 +38,13 @@ public class Lexico extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private TextLineNumber lineNumber;
 	private boolean isEdit, firstTime = true;
-	private boolean isCompile;
+	private boolean isCompilled;
 	private static String nameFile = "nuevo.txt";
 	private static File global = null;
-	private LexicalAnalyzer analyse;
+	private LexerF analyse;
+	private Table table;
 
-	public Lexico() {
+	public Main() {
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(605, 393);
@@ -52,11 +53,11 @@ public class Lexico extends JFrame {
 	}
 
 	public static void main(String a[]) {
-		new Lexico().setVisible(true);
+		new Main().setVisible(true);
 	}
-
+	private JScrollPane scrollPane= null;
 	private final void init() {
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.setBorder(new TitledBorder(null, nameFile, TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		scrollPane.setAutoscrolls(true);
 		scrollPane.setBounds(10, 34, 580, 133);
@@ -74,6 +75,7 @@ public class Lexico extends JFrame {
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 				lineNumber.setUpdateFont(true);
+				isEdit=true; isCompilled=false;
 			}
 
 			@Override
@@ -81,6 +83,7 @@ public class Lexico extends JFrame {
 				// TODO Auto-generated method stub
 				lineNumber.setUpdateFont(true);
 				isEdit = true;
+				isCompilled=false;
 			}
 
 			@Override
@@ -95,7 +98,7 @@ public class Lexico extends JFrame {
 		getContentPane().add(tabbedPane);
 
 		JTextPane textPane = new JTextPane();
-		tabbedPane.addTab("Console", new ImageIcon(Lexico.class.getResource("/com/lexico/assets/console.ico")),
+		tabbedPane.addTab("Console", new ImageIcon(Main.class.getResource("/com/lexico/assets/console.ico")),
 				textPane, null);
 
 		JMenuBar menuBar = new JMenuBar();
@@ -117,7 +120,7 @@ public class Lexico extends JFrame {
 					textArea.setText("");
 					renombrar(nameFile,scrollPane);
 					firstTime = true;
-					isCompile=false;
+					isCompilled=false;
 				}
 			}
 		});
@@ -127,7 +130,7 @@ public class Lexico extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (!isEdit) {
-					FileDialog dialog = new FileDialog(Lexico.this, "Open File", FileDialog.LOAD);
+					FileDialog dialog = new FileDialog(Main.this, "Open File", FileDialog.LOAD);
 					dialog.setVisible(true);
 					global = new File(dialog.getDirectory() + dialog.getFile());
 					renombrar(dialog.getFile(),scrollPane);
@@ -138,9 +141,9 @@ public class Lexico extends JFrame {
 						try {
 							String line;
 							while ((line = ss.readLine()) != null) {
-								textArea.setText(textArea.getText() + line + "\r\n");
+								textArea.setText(textArea.getText() + line + "\n");
 							}
-							isEdit = false;
+							isEdit=firstTime = false;
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -180,21 +183,29 @@ public class Lexico extends JFrame {
 		addListeners(mntmCompile, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (global!=null && !isEdit) {
+				if (global!= null && !isEdit ) {
 					try {
-						analyse = new LexicalAnalyzer(new BufferedReader(new FileReader(global)));
-						try {
-							analyse.yylex();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						table= new Table();
+						analyse = new LexerF(new BufferedReader(new FileReader(global)),table);
+						parser par= new parser(analyse);
+						textPane.setText("");
+						par.setError(false);
+						par.setConsole(textPane);
+							try {
+								par.debug_parse();
+							} catch (Exception e) {
+								
+								e.printStackTrace();
+							}
+						isCompilled = true;
+						if(!par.hasError()) {
+							textPane.setText("Compilled succesful");
 						}
-						isCompile = true;
-						textPane.setText("Compilled succesful");
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
 				}
 				else
 					message("Archivo no guardado","Error");
@@ -206,10 +217,10 @@ public class Lexico extends JFrame {
 		addListeners(mntmTokens, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (isCompile) {
+				if (isCompilled) {
 					// Execute this
-					analyse.showData();
-					analyse.setVisible(true);
+					table.addData();
+					table.setVisible(true);
 				}
 			}
 		});
@@ -229,19 +240,19 @@ public class Lexico extends JFrame {
 	}
 	
 	private void saveFile(JTextArea textArea) {
-		if (firstTime || isEdit) {
+		if (firstTime | isEdit | !isCompilled) {
 			if (firstTime) {
-				FileDialog dialog = new FileDialog(Lexico.this, "Save", FileDialog.SAVE);
+				FileDialog dialog = new FileDialog(Main.this, "Save", FileDialog.SAVE);
 				dialog.setFile(nameFile);
 				dialog.setVisible(true);
-				String directory = dialog.getDirectory();
-				if (directory != null)
+				String directory = dialog.getDirectory()+dialog.getFile();
+				if (directory != null) {
 					firstTime = false;
-				global = new File(directory + nameFile);
+					global = new File(directory);
+					renombrar(dialog.getFile(),scrollPane);
+				}
 			}
-
-			if (global.exists())
-				global.delete();
+			global.delete();
 			try {
 				global.createNewFile();
 			} catch (IOException e1) {
@@ -275,9 +286,10 @@ public class Lexico extends JFrame {
 		menu.addActionListener(s);
 	}
 	private void message(String message,String title) {
-		JOptionPane.showMessageDialog(Lexico.this, message, title,JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(Main.this, message, title,JOptionPane.WARNING_MESSAGE);
 	}
 	private void renombrar(String rename,JComponent comp) {
 	comp.setBorder(new TitledBorder(null, rename, TitledBorder.LEADING, TitledBorder.TOP, null, null));
 	}
 }
+

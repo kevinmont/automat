@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
  * <a href="http://www.jflex.de/">JFlex</a> 1.6.1
  * from the specification file <tt>C:/Users/KEVIN/eclipse-workspace/ProyectoAutomatas/src/com/lexico/CalculaTokens.lex</tt>
  */
-public class LexicalAnalyzer extends Tokens {
+public class LexicalAnalyzer extends ShowData {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -259,7 +259,6 @@ public class LexicalAnalyzer extends Tokens {
   /* user code: */
 	LinkedHashMap<String,String> tipos= new LinkedHashMap();
 	LinkedHashMap<String,Integer> repeticiones= new LinkedHashMap();
-	private int conta=0;
 	private void save(String tipo,String key, int value ){
 		if(repeticiones.containsKey(key)){
 			int val=repeticiones.get(key);
@@ -267,18 +266,6 @@ public class LexicalAnalyzer extends Tokens {
 		}else{
 			tipos.put(key,tipo);
 			repeticiones.put(key,value);
-		}
-	}
-	public void showData(){
-		/*Declaramos la forma en que se mostraran los datos en el JTable*/
-		model.getDataVector().removeAllElements();
-		revalidate();
-		for(String val: tipos.keySet()) {
-			String tipo;
-			Integer value;
-			tipo= tipos.get(val);
-			value= repeticiones.get(val);
-			addData(new Object[] {val,tipo,value});
 		}
 	}
 
@@ -713,6 +700,21 @@ public class LexicalAnalyzer extends Tokens {
       }
     }
   }
+
+@Override
+public void addData() {
+		/*Declaramos la forma en que se mostraran los datos en el JTable*/
+		model.getDataVector().removeAllElements();
+		revalidate();
+		for(String val: tipos.keySet()) {
+			String tipo;
+			Integer value;
+			tipo= tipos.get(val);
+			value= repeticiones.get(val);
+			model.addRow(new Object[] {val,tipo,value});
+	}
+	
+}
 
 
 }
