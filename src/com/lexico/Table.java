@@ -3,7 +3,7 @@ package com.lexico;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-public class Table {
+public class Table extends ShowData{
 	private LinkedHashMap<String, Data> table;
 	
 	public Table() {
@@ -11,7 +11,13 @@ public class Table {
 	}
 	
 	public Data put(Data dat) {
-		this.table.put(dat.getValue(), dat);
+		Data da= null;
+		if(table.containsKey(dat.getVar())) {
+			da=(Data)table.get(dat.getVar());
+			da.setCounter(dat.getCounter()+da.getCounter());
+		}else {
+			table.put(dat.getVar(), dat);
+		}
 		return dat;
 	}
 	
@@ -30,6 +36,18 @@ public class Table {
 			"\tState: "+s.getState()+"\tType of Value: "+s.getTypeValue()+"\n";
 		}
 		return cad;
+	}
+
+	@Override
+	public void addData() {
+		// TODO Auto-generated method stub
+		model.getDataVector().removeAllElements();
+		revalidate();
+		for(String val: table.keySet()) {
+			Data tipo;
+			tipo= table.get(val);
+			model.addRow(new Object[] {tipo.getType(),tipo.getVar(),tipo.getValue(),tipo.getState(),tipo.getTypeValue(), tipo.getCounter()});
+		}
 	}
 	
 	

@@ -2,13 +2,32 @@ package com.lexico;
 
 public class Data {
 	
-	private String type, var, value, state, typeValue;
-	public Data(String type, String var, String value, String state, String typeValue) {
+	private String type, var, typeValue;
+	private int counter, state;
+	private Float value; 
+	public Data(String type, String var, int value, int state, String typeValue, int counter) {
+		this.type = type;
+		this.var = var;
+		this.value = (float) value;
+		this.state = state;
+		this.typeValue = typeValue;
+		this.counter=counter;
+	}
+	public Data(String type, String var, float value, int state, String typeValue, int counter) {
 		this.type = type;
 		this.var = var;
 		this.value = value;
 		this.state = state;
 		this.typeValue = typeValue;
+		this.counter=counter;
+	}
+	public Data(String type, String var, String typeValue, int counter) {
+		this.type = type;
+		this.var = var;
+		this.value = 0f;
+		this.state = 0;
+		this.typeValue = typeValue;
+		this.counter=counter;
 	}
 	/**
 	 * Type of the symbol. The symbols are Integer, String, Character, Float 
@@ -34,16 +53,16 @@ public class Data {
 	public void setVar(String var) {
 		this.var = var;
 	}
-	public String getValue() {
+	public Float getValue() {
 		return value;
 	}
-	public void setValue(String value) {
+	public void setValue(float value) {
 		this.value = value;
 	}
-	public String getState() {
+	public int getState() {
 		return state;
 	}
-	public void setState(String state) {
+	public void setState(int state) {
 		this.state = state;
 	}
 	public String getTypeValue() {
@@ -51,9 +70,11 @@ public class Data {
 	}
 	public void setTypeValue(String typeValue) {
 		this.typeValue = typeValue;
+	}	
+	public int getCounter() {
+		return counter;
 	}
-	public Data() {
+	public void setCounter(int counter) {
+		this.counter = counter;
 	}
-	
-	
 }
