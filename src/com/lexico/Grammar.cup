@@ -1,0 +1,163 @@
+/*
+   Simple +/-/* expression language; 
+   parser evaluates constant expressions on the fly
+*/
+
+package com.lexico;
+
+import java_cup.runtime.*;
+import java.io.*;
+
+parser code {:
+	 /* Change the method report_error so it will display the line and
+       column of where the error occurred in the input as well as the
+       reason for the error which is passed into the method in the
+       String 'message'. */
+	private javax.swing.JTextPane console;
+	private boolean hasError;
+	public void setError(boolean e){ this.hasError=e;}
+	public boolean hasError(){ return this.hasError; }
+	public void setConsole(javax.swing.JTextPane comp){
+		this.console=comp;
+	}
+    public void report_error(String message, Object info) {
+   
+        /* Create a StringBuilder called 'm' with the string 'Error' in it. */
+        StringBuilder m = new StringBuilder("Error");
+   
+        /* Check if the information passed to the method is the same
+           type as the type java_cup.runtime.Symbol. */
+        if (info instanceof java_cup.runtime.Symbol) {
+            /* Declare a java_cup.runtime.Symbol object 's' with the
+               information in the object info that is being typecasted
+               as a java_cup.runtime.Symbol object. */
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+   
+            /* Check if the line number in the input is greater or
+               equal to zero. */
+            if (s.left >= 0) {                
+                /* Add to the end of the StringBuilder error message
+                   the line number of the error in the input. */
+                m.append(" in line "+(s.left+1));   
+                /* Check if the column number in the input is greater
+                   or equal to zero. */
+                if (s.right >= 0)                    
+                    /* Add to the end of the StringBuilder error message
+                       the column number of the error in the input. */
+                    m.append(", column "+(s.right));
+            }
+        }
+   
+        /* Add to the end of the StringBuilder error message created in
+           this method the message that was passed into this method. */
+        m.append(" : "+message);
+        console.setText(m.toString());
+		hasError=true;
+        System.err.println(m);
+    }
+
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+    }
+:}
+/* define how to connect to the scanner! */
+/* Terminals (tokens returned by the scanner). */
+terminal VALI, VALF, VALC, VALS, DIVI, SUMA, RESTA, MULT;
+terminal COR_IZQ, COR_DER, PAR_IZQ, PAR_DER, IMPORT, RETURN, MAIN;
+terminal FIN_LINEA, COM_SIMPLE, ASIGNACION, SALIDA, ENTRADA;
+terminal COMA, SYM, PUNTO;
+terminal NUMI, NUMF, ID;        // our scanner provides numbers as integers
+
+
+/* Non terminals */
+non terminal inicio;     // used to store evaluated subexpressions
+non terminal method, cuerpo, fin, value, declaraciones, tipo, mensaje;
+non terminal texto, asignar, mensaje2;
+non terminal operacion;
+/* Precedences */
+precedence left RESTA, SUMA;
+precedence left MULT, DIVI;
+ 
+
+inicio ::= IMPORT ID  method
+		 | method
+		 ;
+
+method ::= VALI MAIN PAR_IZQ PAR_DER COR_IZQ cuerpo COR_DER;
+
+//Aqui hay algunas dudas volver a revisar
+cuerpo ::= declaraciones FIN_LINEA cuerpo	
+		| fin
+		;
+
+//checar la segunda y cuarta linea para comprobacion del ID que exista en la tabla de simbolos
+// y par su asignacion comprobrar el tipo de valores
+declaraciones ::= tipo ID 
+				| ENTRADA PAR_IZQ tipo COMA ID PAR_DER
+				| SALIDA PAR_IZQ mensaje PAR_DER
+				| ID ASIGNACION asignar
+				;
+
+//Comprabar el resultado de la asignacion
+asignar ::= ID 
+		| COM_SIMPLE COM_SIMPLE texto COM_SIMPLE COM_SIMPLE
+		| mensaje2 
+		| operacion 
+		;
+
+operacion ::= operacion SUMA operacion
+			| operacion RESTA operacion
+			| operacion MULT operacion
+			| operacion DIVI operacion 
+			| NUMI
+			| NUMF
+			;
+
+
+mensaje ::= COM_SIMPLE COM_SIMPLE texto COM_SIMPLE COM_SIMPLE
+		| ID
+		;
+
+mensaje2 ::=  COM_SIMPLE texto COM_SIMPLE;
+
+tipo ::= VALI 
+	| VALF 
+	| VALC 
+	| VALS 
+	;
+
+/*No es necesario checar que tipo de texto pone en este sentido*/
+texto ::= texto ID 
+		| ID 
+		| texto SYM 
+		| SYM 
+		|texto NUMI 
+		|NUMI 
+		| texto NUMF 
+		| NUMF
+		| texto PUNTO
+		| PUNTO
+		
+		;
+
+fin ::= RETURN value FIN_LINEA
+		; 
+
+value ::= ID 
+		| NUMI
+		;
+
+/* The grammar rules 
+expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
+            | expr:e SEMI                   {: System.out.println(e); :}
+            ;
+            
+expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
+             | expr:e1 MINUS expr:e2        {: RESULT = e1-e2;        :}
+             | expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
+             | MINUS expr:e                 {: RESULT = -e;           :}
+             %prec UMINUS
+             | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
+             | NUMBER:n	                     {: RESULT = n;           :}
+             ;
+       */
