@@ -1,0 +1,5 @@
+# Example4
+vali main(){
+	//comentario de line//
+
+}

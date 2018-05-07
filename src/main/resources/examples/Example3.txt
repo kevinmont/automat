@@ -1,0 +1,6 @@
+# class
+vali main(){
+	vals cadena=> ''aqui va una cade de texto'';
+	fout(cadena);
+	return 0;
+}

@@ -2,8 +2,13 @@
 bin
 .classpath
 .project
+<<<<<<< HEAD
 src/com/lexico/Imple.java
 CalculaTokens.lex
 java-cup-11a.jar
 
 
+=======
+target
+src/site
+>>>>>>> test
