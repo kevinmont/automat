@@ -1,7 +1,7 @@
 vali main(){
 	vali primero;
 	vali segundo;
-	primero=>45;
+	primero=45;
 	segundo=100 + primero;
 	return segundo;
 	// comentario //

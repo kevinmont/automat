@@ -102,7 +102,7 @@ public class Main extends JFrame {
 		getContentPane().add(tabbedPane);
 
 		textPane = new JTextPane();
-		tabbedPane.addTab("Console", new ImageIcon(Main.class.getResource("/com/lexico/assets/console.ico")),
+		tabbedPane.addTab("Console", new ImageIcon(Main.class.getResource("/assets/console.ico")),
 				textPane, null);
 
 		JMenuBar menuBar = new JMenuBar();
@@ -135,6 +135,7 @@ public class Main extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (!isEdit) {
 					FileDialog dialog = new FileDialog(Main.this, "Open File", FileDialog.LOAD);
+					dialog.setDirectory(System.getProperty("user.dir")+"/src/main/resources/examples");
 					dialog.setVisible(true);
 					global = new File(dialog.getDirectory() + dialog.getFile());
 					renombrar(dialog.getFile(),scrollPane);
