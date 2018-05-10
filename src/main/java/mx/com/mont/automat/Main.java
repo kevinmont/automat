@@ -1,17 +1,6 @@
-package com.lexico;
+package mx.com.mont.automat;
 
-import javax.swing.JFrame;
-import javax.swing.JTextPane;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
+import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
@@ -24,11 +13,23 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import com.lineNumber.TextLineNumber;
+import javax.swing.JTextPane;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import mx.com.mont.linenumber.TextLineNumber;
 
 public class Main extends JFrame {
 
@@ -43,6 +44,9 @@ public class Main extends JFrame {
 	private static File global = null;
 	private LexerF analyse;
 	private Table table;
+	private JScrollPane scrollPane= null;
+	private JTextArea textArea = null;
+	private JTextPane textPane= null;
 
 	public Main() {
 		this.setResizable(false);
@@ -55,7 +59,7 @@ public class Main extends JFrame {
 	public static void main(String a[]) {
 		new Main().setVisible(true);
 	}
-	private JScrollPane scrollPane= null;
+	
 	private final void init() {
 		scrollPane = new JScrollPane();
 		scrollPane.setBorder(new TitledBorder(null, nameFile, TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -63,7 +67,7 @@ public class Main extends JFrame {
 		scrollPane.setBounds(10, 34, 580, 133);
 		getContentPane().add(scrollPane);
 
-		JTextArea textArea = new JTextArea();
+		textArea = new JTextArea();
 		textArea.setBorder(new LineBorder(new Color(64, 64, 64), 1, true));
 
 		scrollPane.setViewportView(textArea);
@@ -97,7 +101,7 @@ public class Main extends JFrame {
 		tabbedPane.setBounds(2, 187, 595, 178);
 		getContentPane().add(tabbedPane);
 
-		JTextPane textPane = new JTextPane();
+		textPane = new JTextPane();
 		tabbedPane.addTab("Console", new ImageIcon(Main.class.getResource("/com/lexico/assets/console.ico")),
 				textPane, null);
 

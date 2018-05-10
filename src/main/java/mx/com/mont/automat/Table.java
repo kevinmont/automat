@@ -1,4 +1,4 @@
-package com.lexico;
+package mx.com.mont.automat;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

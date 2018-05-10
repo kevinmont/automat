@@ -3,7 +3,7 @@
    parser evaluates constant expressions on the fly
 */
 
-package com.lexico;
+package mx.com.mont.automat;
 
 import java_cup.runtime.*;
 import java.io.*;

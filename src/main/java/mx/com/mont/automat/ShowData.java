@@ -1,4 +1,4 @@
-package com.lexico;
+package mx.com.mont.automat;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;

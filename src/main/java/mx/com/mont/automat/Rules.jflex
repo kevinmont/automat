@@ -1,4 +1,4 @@
-package com.lexico;
+package mx.com.mont.automat;
 import java_cup.runtime.*;
 import java.io.*;
 %%
@@ -49,10 +49,10 @@ COMMENT = "/*"[^.]*"*/"
 "-"					{ save(new Data("Operador",yytext(),"Para restar",1));										return symbol(sym.RESTA); }
 "*"					{ save(new Data("Operador",yytext(),"Para multiplicar",1));									return symbol(sym.MULT); }
 "/"					{ save(new Data("Operador",yytext(),"Para dividir",1));										return symbol(sym.DIVI); }
-"{"					{ save(new Data("Corchete izq",yytext(),"Llave inicio de declación",1));					return symbol(sym.COR_IZQ); }
-"}"					{ save(new Data("Corchete der",yytext(),"Cierre de declaración",1));						return symbol(sym.COR_DER); }
-"("					{ save(new Data("Parentésis izq",yytext(),"Parentésis izq",1));								return symbol(sym.PAR_IZQ); }
-")"					{ save(new Data("Parentésis der",yytext(),"Parentésis der",1));								return symbol(sym.PAR_DER); }
+"{"					{ save(new Data("Corchete izq",yytext(),"Llave inicio de declaciï¿½n",1));					return symbol(sym.COR_IZQ); }
+"}"					{ save(new Data("Corchete der",yytext(),"Cierre de declaraciï¿½n",1));						return symbol(sym.COR_DER); }
+"("					{ save(new Data("Parentï¿½sis izq",yytext(),"Parentï¿½sis izq",1));								return symbol(sym.PAR_IZQ); }
+")"					{ save(new Data("Parentï¿½sis der",yytext(),"Parentï¿½sis der",1));								return symbol(sym.PAR_DER); }
 "#"					{ save(new Data("Importacion",yytext(),"Reservada",1));										return symbol(sym.IMPORT); }
 "return"			{ save(new Data("Retorno",yytext(),"Reservada",1));											return symbol(sym.RETURN); }
 "fout"				{ save(new Data("Salida",yytext(),"Salida de texto",1));									return symbol(sym.SALIDA); }
